@@ -13,6 +13,7 @@ H = 720
 
 -- Game properties.
 state = "game"
+gravity = 9.8
 
 
 function love.load()
