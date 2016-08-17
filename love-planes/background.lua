@@ -1,18 +1,5 @@
 Background = class(WorldObject)
 
-
-function Background:init(img, width, height)
-    WorldObject.init(self,img, width, height)
-end
-
-function Background:setImage(img)
-    WorldObject.setImage(self,img)
-end
-
-function Background:setSize(width, height)
-     WorldObject.setSize(self,width,height)
-end
-
 function Background:draw(stepSize)
 	local x = self.x
     love.graphics.setColor(self.color)

@@ -77,10 +77,11 @@ function class(base_class)
         return o
     end
 
+    local class_mt = {}
+    class_mt.__call  = new_class.new
     if base_class then
-        base_class.__call = new_class.new
-        return setmetatable(new_class, base_class)
+        class_mt.__index = base_class.__index
     end
 
-    return setmetatable(new_class, {__call = new_class.new})
+    return setmetatable(new_class, class_mt)
 end

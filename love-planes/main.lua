@@ -3,6 +3,7 @@ require "class"
 require "world_object"
 require "screen"
 require "background"
+require "player"
 
 
 -- Game dimensions.
@@ -11,7 +12,7 @@ H = 720
 
 
 -- Game properties.
-state = "menu"
+state = "game"
 
 
 function love.load()
@@ -20,6 +21,9 @@ function love.load()
 
     back = Background("images/back.png")
     back:setSize(W, H)
+
+    player = Player("images/plane0.png")
+    player:setPosition(100, 0)
 end
 
 function love.resize(w, h)
@@ -50,7 +54,7 @@ function love.mousereleased(x, y, button, istouch)
     if state == "menu" then
         state = "game"
     elseif state == "game" then
-        state = "menu"
+        player:up(30)
     end
 end
 
@@ -62,11 +66,11 @@ end
 
 
 function updateMenu(dt)
-    --moveBackground(50 * dt)
+    
 end
 
 function updateGame(dt)
-    --moveBackground(150 * dt)
+    player:update(dt)
 end
 
 function drawMenu()
@@ -75,6 +79,7 @@ end
 
 function drawGame()
     back:draw(-1)
+    player:draw()
 end
 
 
