@@ -6,14 +6,13 @@ function Player:init(img, width, height)
     self.frame = 0
     self.gravity = gravity
     self.yspeed = 0
-    self.img0 = love.graphics.newImage("images/plane0.png")
-    self.img1 = love.graphics.newImage("images/plane1.png")
-    self.img2 = love.graphics.newImage("images/plane2.png")
-    --self.imgv = {love.graphics.newImage("images/plane0.png"),love.graphics.newImage("images/plane1.png"),love.graphics.newImage("images/plane2.png")}
+    self.img0 = images["plane0"]
+    self.img1 = images["plane1"]
+    self.img2 = images["plane2"]
+    self.imgv = {love.graphics.newImage("images/plane0.png"),love.graphics.newImage("images/plane1.png"),love.graphics.newImage("images/plane2.png")}
 end
 
 function Player:update(dt)
-    print("Actuliza")
     WorldObject.update(self,dt)
     --movimiento
     self.yspeed = self.yspeed + self.gravity
@@ -37,6 +36,6 @@ function Player:update(dt)
 end
 
 function Player:up(jump)
-    self.yspeed = -240
+    self.yspeed = -300
 end
 

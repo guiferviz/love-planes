@@ -5,22 +5,38 @@ require "screen"
 require "background"
 require "player"
 
+---------------------
+-- Game properties --
+---------------------
 
 -- Game dimensions.
 W = 1280
 H = 720
 
-
--- Game properties.
 state = "game"
+
 gravity = 9.8
+
+-- Key: image id    Value: image path
+imagesPaths = {plane0 = "images/plane0.png",
+               plane1 = "images/plane1.png",
+               plane2 = "images/plane2.png",
+               back   = "images/back.png"}
+-- Key: image id    Value: love image object
+images = {}
 
 
 function love.load()
+    -- Set screen dimensions.
     love.window.setMode(W, H, {resizable=true})
     Screen.set(W, H)
 
-    back = Background("images/back.png")
+    -- Load all the images
+    for k, v in pairs(imagesPaths) do
+        images[k] = love.graphics.newImage(v)
+    end
+
+    back = Background(images["back"])
     back:setSize(W, H)
 
     player = Player("images/plane0.png")
