@@ -2,6 +2,7 @@
 require "class"
 require "world_object"
 require "screen"
+require "background"
 
 
 -- Game dimensions.
@@ -17,7 +18,7 @@ function love.load()
     love.window.setMode(W, H, {resizable=true})
     Screen.set(W, H)
 
-    back = WorldObject("images/back.png")
+    back = Background("images/back.png")
     back:setSize(W, H)
 end
 
@@ -61,11 +62,11 @@ end
 
 
 function updateMenu(dt)
-    moveBackground(50 * dt)
+    --moveBackground(50 * dt)
 end
 
 function updateGame(dt)
-    moveBackground(150 * dt)
+    --moveBackground(150 * dt)
 end
 
 function drawMenu()
@@ -73,7 +74,7 @@ function drawMenu()
 end
 
 function drawGame()
-    back:draw()
+    back:draw(-1)
 end
 
 
