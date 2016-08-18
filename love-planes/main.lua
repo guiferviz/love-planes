@@ -64,6 +64,9 @@ function love.draw()
         drawGame()
     end
 
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.print(love.timer.getFPS())
+
     Screen.drawBorders()
 end
 
