@@ -33,6 +33,6 @@ function Player:update(dt)
 end
 
 function Player:up()
-    self.vy = -300
+    self.vy = - 300
 end
 

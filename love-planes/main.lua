@@ -29,6 +29,7 @@ imagesPaths = {plane0 = "images/plane0.png",
            	   mountain1 = "images/mountain1.png"}
 -- Key: image id    Value: love image object
 images = {}
+seed = 0--os.time()
 
 
 function love.load()
@@ -41,6 +42,9 @@ function love.load()
         images[k] = love.graphics.newImage(v)
     end
 
+    -- Set random seed.
+	love.math.setRandomSeed(seed)
+
     back = Background(images["back"])
     back:setSize(W, H)
 
@@ -50,6 +54,7 @@ function love.load()
     wall1 = Wall(images["wall"])
     wall1:setSize(W,200)
     wall1:setPosition(0,H-200)
+    wall1.x = love.math.random() * W
 
     wall2 = Wall(images["wall"])
     wall2:setSize(W,200)
