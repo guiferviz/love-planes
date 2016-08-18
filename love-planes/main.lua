@@ -4,6 +4,7 @@ require "world_object"
 require "screen"
 require "background"
 require "player"
+require "wall"
 
 ---------------------
 -- Game properties --
@@ -21,7 +22,10 @@ gravity = 9.8
 imagesPaths = {plane0 = "images/plane0.png",
                plane1 = "images/plane1.png",
                plane2 = "images/plane2.png",
-               back   = "images/back.png"}
+               back   = "images/back.png",
+           	   wall   = "images/wall0.png",
+           	   mountain1 = "images/mountain0.png",
+           	   mountain2 = "images/mountain1.png"}
 -- Key: image id    Value: love image object
 images = {}
 
@@ -41,6 +45,17 @@ function love.load()
 
     player = Player(120, 100)
     player:setPosition(100, 0)
+
+    wall1 = Wall(images["wall"])
+    wall1:setSize(W,200)
+    wall1:setPosition(0,H-200)
+
+    wall2 = Wall(images["wall"])
+    wall2:setSize(W,200)
+    --wall2:setPosition(W/2,H/2)
+    wall2.scale_h = -wall2.scale_h
+    wall2.oy = wall2.img_h
+    wall2.x = love.math.random() * W
 end
 
 function love.resize(w, h)
@@ -91,6 +106,8 @@ end
 
 function updateGame(dt)
     back:update(dt)
+    wall1:update(dt)
+    wall2:update(dt)
     player:update(dt)
 end
 
@@ -99,7 +116,9 @@ function drawMenu()
 end
 
 function drawGame()
-    back:draw()
+	back:draw()
+    wall1:draw()
+    wall2:draw()
     player:draw()
 end
 
