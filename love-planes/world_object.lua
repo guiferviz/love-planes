@@ -11,6 +11,8 @@
         r (number): rotation in radians (default: 0).
         ox (number): offset x (default: 0).
         oy (number): offset y (default: 0).
+        vx (number): speed x (default: 0).
+        vy (number): speed y (default: 0).
         img (Image): image to draw.
         img_w (number): original image width.
         img_h (number): original image height.
@@ -26,6 +28,8 @@ function WorldObject:init(img, width, height)
     self.r = 0
     self.ox = 0
     self.oy = 0
+    self.vx = 0
+    self.vy = 0
     self.color = {255, 255, 255, 255}
 
     self.img_w = 0
@@ -77,5 +81,6 @@ function WorldObject:draw()
 end
 
 function WorldObject:update(dt)
-    -- implement on a subclass
+    self.x = self.x + self.vx * dt
+    self.y = self.y + self.vy * dt
 end

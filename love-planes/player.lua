@@ -5,7 +5,6 @@ function Player:init(width, height)
     self.time = 0
     self.frameRate = 5 / 60  -- Animation speed.
     self.gravity = gravity
-    self.yspeed = 0
 
     self.imgIdx = 0
     self.imgListSize = 4
@@ -22,8 +21,7 @@ function Player:update(dt)
     WorldObject.update(self, dt)
 
     -- Movement.
-    self.yspeed = self.yspeed + self.gravity
-    self.y = self.y + self.yspeed * dt
+    self.vy = self.vy + self.gravity
 
     -- Animate sprite.
     self.time = self.time + dt
@@ -35,6 +33,6 @@ function Player:update(dt)
 end
 
 function Player:up()
-    self.yspeed = -300
+    self.vy = -300
 end
 

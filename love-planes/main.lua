@@ -39,7 +39,7 @@ function love.load()
     back = Background(images["back"])
     back:setSize(W, H)
 
-    player = Player()
+    player = Player(120, 100)
     player:setPosition(100, 0)
 end
 
@@ -90,6 +90,7 @@ function updateMenu(dt)
 end
 
 function updateGame(dt)
+    back:update(dt)
     player:update(dt)
 end
 
@@ -98,7 +99,7 @@ function drawMenu()
 end
 
 function drawGame()
-    back:draw(-1)
+    back:draw()
     player:draw()
 end
 
