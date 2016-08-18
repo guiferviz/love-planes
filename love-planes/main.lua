@@ -39,7 +39,7 @@ function love.load()
     back = Background(images["back"])
     back:setSize(W, H)
 
-    player = Player("images/plane0.png")
+    player = Player()
     player:setPosition(100, 0)
 end
 
@@ -74,7 +74,7 @@ function love.mousereleased(x, y, button, istouch)
     if state == "menu" then
         state = "game"
     elseif state == "game" then
-        player:up(30)
+        player:up()
     end
 end
 

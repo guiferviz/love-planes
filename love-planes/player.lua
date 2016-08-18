@@ -1,41 +1,40 @@
 Player = class(WorldObject)
 
 
-function Player:init(img, width, height)
-    WorldObject.init(self,img, width, height)
-    self.frame = 0
+function Player:init(width, height)
+    self.time = 0
+    self.frameRate = 5 / 60  -- Animation speed.
     self.gravity = gravity
     self.yspeed = 0
-    self.img0 = images["plane0"]
-    self.img1 = images["plane1"]
-    self.img2 = images["plane2"]
-    self.imgv = {love.graphics.newImage("images/plane0.png"),love.graphics.newImage("images/plane1.png"),love.graphics.newImage("images/plane2.png")}
+
+    self.imgIdx = 0
+    self.imgListSize = 4
+    self.imgList = {}
+    self.imgList[0] = "plane0"
+    self.imgList[1] = "plane1"
+    self.imgList[2] = "plane2"
+    self.imgList[3] = "plane1"
+
+    WorldObject.init(self, images[self.imgList[self.imgIdx]], width, height)
 end
 
 function Player:update(dt)
-    WorldObject.update(self,dt)
-    --movimiento
+    WorldObject.update(self, dt)
+
+    -- Movement.
     self.yspeed = self.yspeed + self.gravity
     self.y = self.y + self.yspeed * dt
 
-    --Helices
-    self.frame = self.frame + 60 * dt --60 porque normalmente dt * 60 = 1
-
-
-    if self.frame < 15 then
-        self.img = self.img0
-    elseif self.frame < 30 then
-        self.img = self.img1
-    elseif self.frame < 45 then
-        self.img = self.img2
-    else
-        self.img = self.img1
-        self.frame = 0
+    -- Animate sprite.
+    self.time = self.time + dt
+    if self.time > self.frameRate then
+        self.time = self.time - self.frameRate
+        self.imgIdx = (self.imgIdx + 1) % self.imgListSize
+        self:setImage(images[self.imgList[self.imgIdx]])
     end
-    
 end
 
-function Player:up(jump)
+function Player:up()
     self.yspeed = -300
 end
 
