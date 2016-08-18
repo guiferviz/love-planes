@@ -5,6 +5,7 @@ require "screen"
 require "background"
 require "player"
 require "wall"
+require "queue"
 
 ---------------------
 -- Game properties --
@@ -24,8 +25,8 @@ imagesPaths = {plane0 = "images/plane0.png",
                plane2 = "images/plane2.png",
                back   = "images/back.png",
            	   wall   = "images/wall0.png",
-           	   mountain1 = "images/mountain0.png",
-           	   mountain2 = "images/mountain1.png"}
+           	   mountain0 = "images/mountain0.png",
+           	   mountain1 = "images/mountain1.png"}
 -- Key: image id    Value: love image object
 images = {}
 
