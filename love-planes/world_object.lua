@@ -69,15 +69,24 @@ function WorldObject:setSize(width, height)
     self.scale_h = height / self.img_h
 end
 
-function WorldObject:collide(point)
+function WorldObject:checkCollisionPoint(point)
     return (point.x >= self.x and point.x <= self.x + self.w
         and point.y >= self.y and point.y <= self.y + self.h)
+end
+
+function WorldObject:checkCollision(o)
+    return self.x < o.x + o.w       and
+           self.y < o.y + o.h       and
+           o.x    < self.x + self.w and
+           o.y    < self.y + self.h
 end
 
 function WorldObject:draw()
     love.graphics.setColor(self.color)
     love.graphics.draw(self.img, self.x, self.y, self.r,
             self.scale_w, self.scale_h, self.ox, self.oy)
+    love.graphics.setColor(255, 0, 0)
+    love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 end
 
 function WorldObject:update(dt)

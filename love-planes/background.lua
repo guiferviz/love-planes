@@ -28,3 +28,8 @@ function Background:draw(stepSize)
         x = x + self.w
     end 
 end
+
+function Background:checkCollision(o)
+    return self.y < o.y + o.h       and
+           o.y    < self.y + self.h
+end

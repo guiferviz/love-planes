@@ -24,9 +24,9 @@ imagesPaths = {plane0 = "images/plane0.png",
                plane1 = "images/plane1.png",
                plane2 = "images/plane2.png",
                back   = "images/back.png",
-           	   wall   = "images/wall0.png",
-           	   mountain0 = "images/mountain0.png",
-           	   mountain1 = "images/mountain1.png"}
+               wall   = "images/wall0.png",
+               mountain0 = "images/mountain0.png",
+               mountain1 = "images/mountain1.png"}
 -- Key: image id    Value: love image object
 images = {}
 seed = 0--os.time()
@@ -43,7 +43,7 @@ function love.load()
     end
 
     -- Set random seed.
-	love.math.setRandomSeed(seed)
+    love.math.setRandomSeed(seed)
 
     back = Background(images["back"])
     back:setSize(W, H)
@@ -52,12 +52,12 @@ function love.load()
     player:setPosition(100, 0)
 
     wall1 = Wall(images["wall"])
-    wall1:setSize(W,200)
-    wall1:setPosition(0,H-200)
+    wall1:setSize(W, 150)
+    wall1:setPosition(0, H - wall1.h)
     wall1.x = love.math.random() * W
 
     wall2 = Wall(images["wall"])
-    wall2:setSize(W,200)
+    wall2:setSize(W, 150)
     --wall2:setPosition(W/2,H/2)
     wall2.scale_h = -wall2.scale_h
     wall2.oy = wall2.img_h
@@ -115,6 +115,14 @@ function updateGame(dt)
     wall1:update(dt)
     wall2:update(dt)
     player:update(dt)
+
+    if wall1:checkCollision(player) or
+       wall2:checkCollision(player)
+    then
+        player.color = {255, 55, 55, 255}
+    else
+        player.color = {255, 255, 255}
+    end
 end
 
 function drawMenu()
@@ -122,7 +130,7 @@ function drawMenu()
 end
 
 function drawGame()
-	back:draw()
+    back:draw()
     wall1:draw()
     wall2:draw()
     player:draw()

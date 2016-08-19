@@ -3,7 +3,7 @@ Player = class(WorldObject)
 
 function Player:init(width, height)
     self.time = 0
-    self.frameRate = 5 / 60  -- Animation speed.
+    self.frameRate = 2 / 60  -- Animation speed.
     self.gravity = gravity
 
     self.imgIdx = 0
@@ -34,5 +34,9 @@ end
 
 function Player:up()
     self.vy = - 300
+end
+
+function Player:collide()
+    -- body
 end
 
