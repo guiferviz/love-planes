@@ -32,6 +32,13 @@ function Player:update(dt)
 
     -- Movement.
     self.vy = self.vy + self.gravity
+    local rAim = self.vy / 1000
+    if self.vy < 0 then
+        self.r = self.r - 0.1
+        if self.r < rAim then self.r = rAim end
+    else
+        self.r = rAim
+    end
 
     -- Animate sprite.
     self.time = self.time + dt
@@ -73,10 +80,14 @@ function Player:checkCollision(o, sx)
     return false
 end
 
---[[ Draw collision points.
 function Player:draw()
-    WorldObject.draw(self)
+    --WorldObject.draw(self)
+    love.graphics.setColor(self.color)
+    love.graphics.draw(self.img, self.x + self.w/2, self.y + self.h/2,
+        self.r, self.scale_w, self.scale_h,
+        self.ox + self.img_w/2, self.oy + self.img_h/2)
 
+    --[[ Draw collision points.
     love.graphics.setPointSize(10)
     love.graphics.setColor(0, 0, 250)
     for _, p in pairs(self.collisionPoints) do
@@ -91,5 +102,5 @@ function Player:draw()
         p = self.queue:pop()
         love.graphics.points(p.x, p.y)
     end
+    --]]
 end
---]]
