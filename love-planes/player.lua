@@ -50,20 +50,20 @@ function Player:collide()
     -- body
 end
 
-function Player:checkCollision(o)
+function Player:checkCollision(o, sx)
     if WorldObject.checkCollision(self, o) then
         for _, p in pairs(self.collisionPoints) do
-            local x = (self.x + (p.x * self.scale_w) - o.x) / o.scale_w
-            local y = (self.y + (p.y * self.scale_h) - o.y) / o.scale_h
+            local x = (self.x + (p.x * self.scale_w) - o.x) / o.scale_w + o.ox
+            local y = (self.y + (p.y * self.scale_h) - o.y) / o.scale_h + o.oy
             x = math.floor(x)
             y = math.floor(y)
-            if o.scale_h < 0 then y = y + o.oy end
 
             if x >= 0 and x < o.img_w and y >= 0 and y < o.img_h then
                 r, g, b, a = o.img:getData():getPixel(x, y)
 
                 if a >= 128 then
-                    self.queue:push({x= o.x + x * o.scale_w, y = o.y + y * o.scale_h})
+                    self.queue:push({x = self.x + (p.x * self.scale_w),
+                                     y = self.y + (p.y * self.scale_h)})
                     return true
                 end
             end

@@ -34,7 +34,7 @@ seed = 0--os.time()
 
 function love.load()
     -- Set screen dimensions.
-    love.window.setMode(W, H, {resizable=true})
+    love.window.setMode(W, H, {resizable=true, fullscreen=false})
     Screen.set(W, H)
 
     -- Load all the images
@@ -53,15 +53,13 @@ function love.load()
 
     wall1 = Wall(images["wall"])
     wall1:setSize(W, 150)
-    wall1:setPosition(0, H - wall1.h)
-    wall1.x = love.math.random() * W
+    wall1:setPosition(- love.math.random() * W, H - wall1.h)
 
     wall2 = Wall(images["wall"])
     wall2:setSize(W, 150)
-    --wall2:setPosition(W/2,H/2)
+    wall2:setPosition(- love.math.random() * W, 0)
     wall2.scale_h = -wall2.scale_h
     wall2.oy = wall2.img_h
-    wall2.x = love.math.random() * W
 
     --Music
     music = love.audio.newSource("sounds/Good-Morning-Doctor-Weird.mp3") -- if "static" is omitted, LÖVE will stream the file from disk, good for longer music tracks

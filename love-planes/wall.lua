@@ -8,6 +8,8 @@ function Wall:init(...)
     self.minDist = 200
     self.maxDist = images["mountain0"]:getWidth() * 4
     self.probability = 0.01
+
+    self.woAux = WorldObject(...)
 end
 
 function Wall:update(dt)
@@ -58,8 +60,19 @@ function Wall:checkCollision(o)
     end
 
     if Background.checkCollision(self, o) then
-        if o:checkCollision(self) then
-            return true
+        self.woAux.y = self.y
+        self.woAux.ox = self.ox
+        self.woAux.oy = self.oy
+        self.woAux.scale_w = self.scale_w
+        self.woAux.scale_h = self.scale_h
+        local x = self.x
+        while x < W do
+            self.woAux.x = x
+            if Background.checkCollision(self.woAux, o)
+                and o:checkCollision(self.woAux) then
+                    return true
+            end
+            x = x + self.w
         end
     end
 
