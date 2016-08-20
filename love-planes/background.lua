@@ -13,8 +13,8 @@ end
 function Background:update(dt)
     WorldObject.update(self, dt)
 
-    if self.x > 0 then
-        self.x = self.x - self.w
+    if self.x < -self.w then
+        self.x = self.x + self.w
     end
 end
 
@@ -26,5 +26,10 @@ function Background:draw(stepSize)
         love.graphics.draw(self.img, x, self.y, self.r,
             self.scale_w, self.scale_h, self.ox, self.oy)
         x = x + self.w
-    end 
+    end
+end
+
+function Background:checkCollision(o)
+    return self.y < o.y + o.h       and
+           o.y    < self.y + self.h
 end

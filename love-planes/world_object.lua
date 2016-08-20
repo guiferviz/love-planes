@@ -69,9 +69,16 @@ function WorldObject:setSize(width, height)
     self.scale_h = height / self.img_h
 end
 
-function WorldObject:collide(point)
+function WorldObject:checkCollisionPoint(point)
     return (point.x >= self.x and point.x <= self.x + self.w
         and point.y >= self.y and point.y <= self.y + self.h)
+end
+
+function WorldObject:checkCollision(o)
+    return self.x < o.x + o.w       and
+           self.y < o.y + o.h       and
+           o.x    < self.x + self.w and
+           o.y    < self.y + self.h
 end
 
 function WorldObject:draw()

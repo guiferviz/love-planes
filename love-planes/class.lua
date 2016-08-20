@@ -85,3 +85,20 @@ function class(base_class)
 
     return setmetatable(new_class, class_mt)
 end
+
+
+function instanceof(object, class)
+    if class == nil then return false end
+
+    local mt = object
+    while mt ~= nil do
+        mt = mt.__index
+
+        if mt == class then return true end
+        
+        mt = getmetatable(mt)
+    end
+
+    return false
+end
+
