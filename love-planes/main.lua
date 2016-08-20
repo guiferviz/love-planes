@@ -114,6 +114,8 @@ function updateMenu(dt)
 end
 
 function updateGame(dt)
+    music:setPitch(music:getPitch() + dt * 0.005)
+
     back:update(dt)
     wall1:update(dt)
     wall2:update(dt)
