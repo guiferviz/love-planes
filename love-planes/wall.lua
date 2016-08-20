@@ -23,7 +23,8 @@ function Wall:update(dt)
         local last = self.mountains.queue[self.mountains.last]
         if not last or last.x + self.minDist < W then
             local r = love.math.random()
-            local mountain = WorldObject(images["mountain0"], 100 + r * 75, 200 + r * 150)
+            local mountain = WorldObject(images["mountain0"],
+                    100 + r * 75, 200 + r * 150)
             mountain.vx = self.vx
             if self.scale_h < 0 then
                 mountain.scale_h = -mountain.scale_h
@@ -51,14 +52,15 @@ end
 
 function Wall:checkCollision(o)
     for i = self.mountains.first, self.mountains.last do
-        if self.mountains.queue[i]:checkCollision(o) then
+        if o:checkCollision(self.mountains.queue[i]) then
             return true
         end
     end
 
     if Background.checkCollision(self, o) then
-        
-        return true
+        if o:checkCollision(self) then
+            return true
+        end
     end
 
     return false

@@ -49,7 +49,7 @@ function love.load()
     back:setSize(W, H)
 
     player = Player(120, 100)
-    player:setPosition(100, 0)
+    player:setPosition(100, H/4)
 
     wall1 = Wall(images["wall"])
     wall1:setSize(W, 150)
@@ -62,6 +62,11 @@ function love.load()
     wall2.scale_h = -wall2.scale_h
     wall2.oy = wall2.img_h
     wall2.x = love.math.random() * W
+
+    --Music
+    music = love.audio.newSource("sounds/Good-Morning-Doctor-Weird.mp3") -- if "static" is omitted, LÖVE will stream the file from disk, good for longer music tracks
+    music:setLooping(true)
+    music:play()
 end
 
 function love.resize(w, h)
