@@ -27,9 +27,6 @@ function Background:draw(stepSize)
             self.scale_w, self.scale_h, self.ox, self.oy)
         x = x + self.w
     end
-
-    love.graphics.setColor(255, 0, 0)
-    love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 end
 
 function Background:checkCollision(o)

@@ -17,7 +17,7 @@ H = 720
 
 state = "game"
 
-gravity = 9.8
+gravity = 9.8 * 2
 
 -- Key: image id    Value: image path
 imagesPaths = {plane0 = "images/plane0.png",

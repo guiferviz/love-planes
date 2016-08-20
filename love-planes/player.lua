@@ -24,7 +24,7 @@ function Player:init(width, height)
                             {x = 10 , y = 70},
                             {x = 60 , y = 145},
                             {x = 133 , y = 165},}
-    self.queue = Queue()
+    --self.queue = Queue()
 end
 
 function Player:update(dt)
@@ -62,8 +62,8 @@ function Player:checkCollision(o, sx)
                 r, g, b, a = o.img:getData():getPixel(x, y)
 
                 if a >= 128 then
-                    self.queue:push({x = self.x + (p.x * self.scale_w),
-                                     y = self.y + (p.y * self.scale_h)})
+                    --self.queue:push({x = self.x + (p.x * self.scale_w),
+                    --                 y = self.y + (p.y * self.scale_h)})
                     return true
                 end
             end
@@ -73,11 +73,12 @@ function Player:checkCollision(o, sx)
     return false
 end
 
+--[[ Draw collision points.
 function Player:draw()
     WorldObject.draw(self)
 
     love.graphics.setPointSize(10)
-    love.graphics.setColor(0,0,250)
+    love.graphics.setColor(0, 0, 250)
     for _, p in pairs(self.collisionPoints) do
         local x = self.x + (p.x * self.scale_w)
         local y = self.y + (p.y * self.scale_h)
@@ -85,9 +86,10 @@ function Player:draw()
     end
 
     love.graphics.setPointSize(15)
-    love.graphics.setColor(0,255,0)
+    love.graphics.setColor(0, 255, 0)
     for i = self.queue.first, self.queue.last do
         p = self.queue:pop()
         love.graphics.points(p.x, p.y)
     end
 end
+--]]

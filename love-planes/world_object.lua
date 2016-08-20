@@ -85,8 +85,6 @@ function WorldObject:draw()
     love.graphics.setColor(self.color)
     love.graphics.draw(self.img, self.x, self.y, self.r,
             self.scale_w, self.scale_h, self.ox, self.oy)
-    love.graphics.setColor(255, 0, 0)
-    love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 end
 
 function WorldObject:update(dt)
