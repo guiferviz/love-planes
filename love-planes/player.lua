@@ -1,19 +1,11 @@
-Player = class(WorldObject)
+Player = class(AnimatedObject)
 
 
-function Player:init(width, height)
-    self.imgIdx = 0
-    self.imgListSize = 4
-    self.imgList = {}
-    self.imgList[0] = "plane0"
-    self.imgList[1] = "plane1"
-    self.imgList[2] = "plane2"
-    self.imgList[3] = "plane1"
+function Player:init()
+    imgList = {"plane0", "plane1", "plane2", "plane1"}
+    AnimatedObject.init(self, imgList)
 
-    WorldObject.init(self, images[self.imgList[self.imgIdx]], width, height)
-
-    self.time = 0
-    self.frameRate = 5 / 60  -- Animation speed.
+    self.animationSpeed = 5 / 60
     self.gravity = gravity
     self.collisionPoints = {{x = 195, y = 93},
                             {x = 170, y = 140},
@@ -28,7 +20,7 @@ function Player:init(width, height)
 end
 
 function Player:update(dt)
-    WorldObject.update(self, dt)
+    AnimatedObject.update(self, dt)
 
     -- Movement.
     self.vy = self.vy + self.gravity
@@ -38,14 +30,6 @@ function Player:update(dt)
         if self.r < rAim then self.r = rAim end
     else
         self.r = rAim
-    end
-
-    -- Animate sprite.
-    self.time = self.time + dt
-    if self.time > self.frameRate then
-        self.time = self.time - self.frameRate
-        self.imgIdx = (self.imgIdx + 1) % self.imgListSize
-        self:setImage(images[self.imgList[self.imgIdx]])
     end
 end
 
@@ -58,7 +42,7 @@ function Player:collide()
 end
 
 function Player:checkCollision(o, sx)
-    if WorldObject.checkCollision(self, o) then
+    if AnimatedObject.checkCollision(self, o) then
         for _, p in pairs(self.collisionPoints) do
             local x = (self.x + (p.x * self.scale_w) - o.x) / o.scale_w + o.ox
             local y = (self.y + (p.y * self.scale_h) - o.y) / o.scale_h + o.oy
@@ -81,7 +65,7 @@ function Player:checkCollision(o, sx)
 end
 
 function Player:draw()
-    --WorldObject.draw(self)
+    --AnimatedObject.draw(self)
     love.graphics.setColor(self.color)
     love.graphics.draw(self.img, self.x + self.w/2, self.y + self.h/2,
         self.r, self.scale_w, self.scale_h,

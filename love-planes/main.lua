@@ -1,6 +1,7 @@
 
 require "class"
 require "world_object"
+require "animated_object"
 require "screen"
 require "background"
 require "player"
@@ -15,7 +16,7 @@ require "queue"
 W = 1280
 H = 720
 
-state = "game"
+state = "menu"
 
 gravity = 9.8 * 2
 
@@ -26,7 +27,10 @@ imagesPaths = {plane0 = "images/plane0.png",
                back   = "images/back.png",
                wall   = "images/wall0.png",
                mountain0 = "images/mountain0.png",
-               mountain1 = "images/mountain1.png"}
+               mountain1 = "images/mountain1.png",
+               ready = "images/ready.png",
+               click = "images/click.png",
+               no_click = "images/no_click.png"}
 -- Key: image id    Value: love image object
 images = {}
 seed = 0--os.time()
@@ -48,23 +52,46 @@ function love.load()
     back = Background(images["back"])
     back:setSize(W, H)
 
-    player = Player(120, 100)
+    ready = WorldObject(images["ready"])
+    ready:setPosition(W/2 - ready.img_w/2, H/2 - ready.img_h/2)
+
+    --Music
+    music = love.audio.newSource("sounds/Good-Morning-Doctor-Weird.mp3") -- if "static" is omitted, LÖVE will stream the file from disk, good for longer music tracks
+    music:setLooping(true)
+    music:play()
+
+    initGame()
+end
+
+function initGame()
+    state = "menu"
+
+    player = Player()
+    player:setSize(120, 100)
     player:setPosition(100, H/4)
+    player.gravity = 0
 
     wall1 = Wall(images["wall"])
     wall1:setSize(W, 150)
     wall1:setPosition(- love.math.random() * W, H - wall1.h)
+    wall1.probability = 0
 
     wall2 = Wall(images["wall"])
     wall2:setSize(W, 150)
     wall2:setPosition(- love.math.random() * W, 0)
     wall2.scale_h = -wall2.scale_h
     wall2.oy = wall2.img_h
+    wall2.probability = 0
 
-    --Music
-    music = love.audio.newSource("sounds/Good-Morning-Doctor-Weird.mp3") -- if "static" is omitted, LÖVE will stream the file from disk, good for longer music tracks
-    music:setLooping(true)
-    music:play()
+    music:setPitch(1)
+end
+
+function startGame()
+    state = "game"
+
+    wall1.probability = 0.01
+    wall2.probability = 0.01
+    player.gravity = gravity
 end
 
 function love.resize(w, h)
@@ -96,7 +123,7 @@ end
 
 function love.mousereleased(x, y, button, istouch)
     if state == "menu" then
-        state = "game"
+        startGame()
     elseif state == "game" then
         player:up()
     end
@@ -110,7 +137,10 @@ end
 
 
 function updateMenu(dt)
-    
+    back:update(dt)
+    wall1:update(dt)
+    wall2:update(dt)
+    player:update(dt)
 end
 
 function updateGame(dt)
@@ -124,14 +154,14 @@ function updateGame(dt)
     if wall1:checkCollision(player) or
        wall2:checkCollision(player)
     then
-        player.color = {255, 55, 55, 255}
-    else
-        player.color = {255, 255, 255}
+        initGame()
     end
 end
 
 function drawMenu()
     drawGame()
+
+    ready:draw()
 end
 
 function drawGame()
