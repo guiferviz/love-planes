@@ -20,6 +20,8 @@ state = "menu"
 
 gravity = 9.8 * 2
 
+score = 0
+
 -- Key: image id    Value: image path
 imagesPaths = {plane0 = "images/plane0.png",
                plane1 = "images/plane1.png",
@@ -30,7 +32,9 @@ imagesPaths = {plane0 = "images/plane0.png",
                mountain1 = "images/mountain1.png",
                ready = "images/ready.png",
                click = "images/click.png",
-               no_click = "images/no_click.png"}
+               no_click = "images/no_click.png",
+               numbers = "images/numbers.png",
+               letters = "images/letters.png"}
 -- Key: image id    Value: love image object
 images = {}
 seed = 0--os.time()
@@ -53,12 +57,19 @@ function love.load()
     back:setSize(W, H)
 
     ready = WorldObject(images["ready"])
-    ready:setPosition(W/2 - ready.img_w/2, H/2 - ready.img_h/2)
+    ready:setPosition(W/2 - ready.img_w/2, H/2 - ready.img_h/2 - 20)
+
+    tap = AnimatedObject{"click", "no_click"}
+    tap:setPosition(W/2 - tap.img_w/2, H * 2/3 - 40)
 
     --Music
     music = love.audio.newSource("sounds/Good-Morning-Doctor-Weird.mp3") -- if "static" is omitted, LÖVE will stream the file from disk, good for longer music tracks
     music:setLooping(true)
     music:play()
+
+    -- Fonts
+    fontNumbers = love.graphics.newImageFont(images["numbers"], "0123456789", 10)
+    fontLetters = love.graphics.newImageFont(images["letters"], "abcdefghijklmnopqrstuvwxyz ")
 
     initGame()
 end
@@ -92,6 +103,7 @@ function startGame()
     wall1.probability = 0.01
     wall2.probability = 0.01
     player.gravity = gravity
+    score = 0
 end
 
 function love.resize(w, h)
@@ -115,6 +127,7 @@ function love.draw()
         drawGame()
     end
 
+    love.graphics.setNewFont(35)
     love.graphics.setColor(0, 0, 0)
     love.graphics.print(love.timer.getFPS())
 
@@ -141,9 +154,11 @@ function updateMenu(dt)
     wall1:update(dt)
     wall2:update(dt)
     player:update(dt)
+    tap:update(dt)
 end
 
 function updateGame(dt)
+    score = score + dt * 2
     music:setPitch(music:getPitch() + dt * 0.005)
 
     back:update(dt)
@@ -162,6 +177,7 @@ function drawMenu()
     drawGame()
 
     ready:draw()
+    tap:draw()
 end
 
 function drawGame()
@@ -169,13 +185,14 @@ function drawGame()
     wall1:draw()
     wall2:draw()
     player:draw()
-end
 
-
-function moveBackground(stepSize)
-    back.x = back.x - stepSize
-
-    if back.x < -W then
-        back.x = 0
-    end
+    love.graphics.push()
+    love.graphics.setFont(fontNumbers)
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.scale(0.5, 0.5)
+    width = fontNumbers:getWidth(math.floor(score))
+    love.graphics.print(math.floor(score), W*2-width-100, 100)
+    love.graphics.setFont(fontLetters)
+    love.graphics.print("hi there", W, 100)
+    love.graphics.pop()
 end

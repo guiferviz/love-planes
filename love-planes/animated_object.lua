@@ -3,7 +3,7 @@
 AnimatedObject = class(WorldObject)
 
 
-function AnimatedObject:init(imglist)
+function AnimatedObject:init(imgList)
 	self.imgIdx = 1
     self.imgListSize = #imgList
     self.imgList = imgList
