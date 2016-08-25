@@ -7,11 +7,14 @@ require "background"
 require "player"
 require "wall"
 require "queue"
+bitser = require "bitser"
 flux = require "flux"
 
 ---------------------
 -- Game properties --
 ---------------------
+
+SAVE_FILENAME = "score"
 
 -- Game dimensions.
 W = 1280
@@ -21,6 +24,7 @@ state = "menu"
 
 gravity = 9.8 * 2
 
+save = {bestScore = 0}
 score = 0
 
 -- Key: image id    Value: image path
@@ -41,7 +45,24 @@ images = {}
 seed = 0--os.time()
 
 
+function loadGameData()
+    if love.filesystem.exists(SAVE_FILENAME) then
+        print "cargando fichero"
+        local saveRead = love.filesystem.read(SAVE_FILENAME)
+        save = bitser.loads(saveRead)
+        print (save.bestScore)
+    end
+end
+
+function saveGameData()
+    local saveDump = bitser.dumps(save)
+    love.filesystem.write(SAVE_FILENAME, saveDump)
+end
+
 function love.load()
+    loadGameData()
+    score = save.bestScore
+
     -- Set screen dimensions.
     love.window.setMode(W, H, {resizable=true, fullscreen=false})
     Screen.set(W, H)
@@ -101,6 +122,13 @@ function initGame()
 
     ready.animate = true
     animateReady()
+
+    -- Save score
+    if score > save.bestScore then
+        print "Guardando mejor puntuación"
+        save.bestScore = math.floor(score)
+        saveGameData()
+    end
 end
 
 function startGame()
