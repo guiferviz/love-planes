@@ -7,6 +7,7 @@ require "background"
 require "player"
 require "wall"
 require "queue"
+flux = require "flux"
 
 ---------------------
 -- Game properties --
@@ -57,7 +58,9 @@ function love.load()
     back:setSize(W, H)
 
     ready = WorldObject(images["ready"])
-    ready:setPosition(W/2 - ready.img_w/2, H/2 - ready.img_h/2 - 20)
+    ready:setPosition(W/2, H/2)
+    ready.ox = ready.img_w / 2
+    ready.oy = ready.img_h / 2
 
     tap = AnimatedObject{"click", "no_click"}
     tap:setPosition(W/2 - tap.img_w/2, H * 2/3 - 40)
@@ -95,11 +98,15 @@ function initGame()
     wall2.probability = 0
 
     music:setPitch(1)
+
+    ready.animate = true
+    animateReady()
 end
 
 function startGame()
     state = "game"
 
+    ready.animate = false
     wall1.probability = 0.01
     wall2.probability = 0.01
     player.gravity = gravity
@@ -111,6 +118,8 @@ function love.resize(w, h)
 end
 
 function love.update(dt)
+    flux.update(dt)
+
     if state == "menu" then
         updateMenu(dt)
     elseif state == "game" then
@@ -195,4 +204,24 @@ function drawGame()
     love.graphics.setFont(fontLetters)
     love.graphics.print("hi there", W, 100)
     love.graphics.pop()
+end
+
+--[[
+    Animate the ready object while ready.animate is true.
+--]]
+function animateReady()
+    if not ready.animate then return end
+    local scale = 0.95
+    local speed = 0.5
+    local r = love.math.random() < 0.5 and -0.1 or 0.1
+
+    ready.tween = flux.to(ready, speed, {scale_w = ready.scale_w * scale, scale_h = ready.scale_h * scale})
+        :delay(3)
+        :after(speed, {scale_w = ready.scale_w, scale_h = ready.scale_h})
+        :after(speed  * 2, {r = r})
+        :delay(3)
+        :ease("elasticinout")
+        :after(speed * 2, {r = ready.r})
+        :ease("elasticinout")
+        :oncomplete(animateReady)
 end
