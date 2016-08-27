@@ -42,15 +42,13 @@ imagesPaths = {plane0 = "images/plane0.png",
                letters = "images/letters.png"}
 -- Key: image id    Value: love image object
 images = {}
-seed = 0--os.time()
+seed = os.time()
 
 
 function loadGameData()
     if love.filesystem.exists(SAVE_FILENAME) then
-        print "cargando fichero"
         local saveRead = love.filesystem.read(SAVE_FILENAME)
         save = bitser.loads(saveRead)
-        print (save.bestScore)
     end
 end
 
@@ -61,7 +59,6 @@ end
 
 function love.load()
     loadGameData()
-    score = save.bestScore
 
     -- Set screen dimensions.
     love.window.setMode(W, H, {resizable=true, fullscreen=false})
@@ -125,7 +122,6 @@ function initGame()
 
     -- Save score
     if score > save.bestScore then
-        print "Guardando mejor puntuación"
         save.bestScore = math.floor(score)
         saveGameData()
     end
@@ -215,6 +211,18 @@ function drawMenu()
 
     ready:draw()
     tap:draw()
+
+    love.graphics.push()
+    love.graphics.setFont(fontNumbers)
+    love.graphics.setColor(255, 255, 255)
+    local scale = 0.4
+    love.graphics.scale(scale, scale)
+    width = fontNumbers:getWidth(math.floor(save.bestScore))
+    love.graphics.print(math.floor(save.bestScore), (W/2)/scale - width/2, H/scale - 200)
+    love.graphics.setFont(fontLetters)
+    width = fontLetters:getWidth("best score")
+    love.graphics.print("best score", (W/2)/scale - width/2, H/scale - 350)
+    love.graphics.pop()
 end
 
 function drawGame()
@@ -223,15 +231,16 @@ function drawGame()
     wall2:draw()
     player:draw()
 
-    love.graphics.push()
-    love.graphics.setFont(fontNumbers)
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.scale(0.5, 0.5)
-    width = fontNumbers:getWidth(math.floor(score))
-    love.graphics.print(math.floor(score), W*2-width-100, 100)
-    love.graphics.setFont(fontLetters)
-    love.graphics.print("hi there", W, 100)
-    love.graphics.pop()
+    if score ~= 0 then
+        love.graphics.push()
+        love.graphics.setFont(fontNumbers)
+        love.graphics.setColor(255, 255, 255)
+        local scale = 0.5
+        love.graphics.scale(scale, scale)
+        widthScore = fontNumbers:getWidth(math.floor(score))
+        love.graphics.print(math.floor(score), W*2-widthScore-100, 100)
+        love.graphics.pop()
+    end
 end
 
 --[[
