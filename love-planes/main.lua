@@ -39,7 +39,8 @@ imagesPaths = {plane0 = "images/plane0.png",
                click = "images/click.png",
                no_click = "images/no_click.png",
                numbers = "images/numbers.png",
-               letters = "images/letters.png"}
+               letters = "images/letters.png",
+               gameover = "images/game_over.png"}
 -- Key: image id    Value: love image object
 images = {}
 seed = os.time()
@@ -77,6 +78,11 @@ function love.load()
 
     tap = AnimatedObject{"click", "no_click"}
     tap:setPosition(W/2 - tap.img_w/2, H * 2/3 - 40)
+
+    gameover = WorldObject(images["gameover"])
+    gameover:setPosition(W/2, H/2)
+    gameover.ox = gameover.img_w / 2
+    gameover.oy = gameover.img_h / 2
 
     --Music
     music = love.audio.newSource("sounds/Good-Morning-Doctor-Weird.mp3")
@@ -151,8 +157,11 @@ function love.draw()
 
     if state == "menu" then
         drawMenu()
-    elseif state == "game" or state == "dead" then
+    elseif state == "game" then
         drawGame()
+    elseif state == "dead" then
+        drawGame()
+        drawGameover()
     end
 
     love.graphics.setNewFont(35)
@@ -236,7 +245,7 @@ function updateGame(dt)
 
     if walls:checkCollision(player) then
         state = "dead"
-        flux.to(flux, 1, {}):oncomplete(initGame)
+        flux.to(flux, 2, {}):oncomplete(initGame)
     end
 end
 
@@ -274,6 +283,10 @@ function drawGame()
         love.graphics.print(math.floor(score), W*2-widthScore-100, 100)
         love.graphics.pop()
     end
+end
+
+function drawGameover()
+    gameover:draw()
 end
 
 --[[
