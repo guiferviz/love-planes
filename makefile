@@ -5,4 +5,5 @@ OUT=game.love
 
 
 all:
-	cd $(SRC); zip -9 -r $(HOME)/$(OUT) .
+	cd $(SRC); zip -9 -r $(HOME)/android/assets/$(OUT) .
+	cd android; ./build.sh
