@@ -5,7 +5,7 @@ require "animated_object"
 require "screen"
 require "background"
 require "player"
-require "wall"
+require "walls"
 require "queue"
 bitser = require "bitser"
 flux = require "flux"
@@ -98,17 +98,8 @@ function initGame()
     player:setPosition(100, H/4)
     player.gravity = 0
 
-    wall1 = Wall(images["wall"])
-    wall1:setSize(W, 150)
-    wall1:setPosition(- love.math.random() * W, H - wall1.h)
-    wall1.probability = 0
-
-    wall2 = Wall(images["wall"])
-    wall2:setSize(W, 150)
-    wall2:setPosition(- love.math.random() * W, 0)
-    wall2.scale_h = -wall2.scale_h
-    wall2.oy = wall2.img_h
-    wall2.probability = 0
+    walls = Walls()
+    walls.probability = 0.0
 
     music:setPitch(1)
 
@@ -134,8 +125,7 @@ function startGame()
         v:stop()
     end
     ready.tween = nil
-    wall1.probability = 0.01
-    wall2.probability = 0.01
+    walls.probability = 0.01
     player.gravity = gravity
     score = 0
 end
@@ -187,8 +177,7 @@ end
 
 function updateMenu(dt)
     back:update(dt)
-    wall1:update(dt)
-    wall2:update(dt)
+    walls:update(dt)
     player:update(dt)
     tap:update(dt)
 end
@@ -198,13 +187,10 @@ function updateGame(dt)
     music:setPitch(music:getPitch() + dt * 0.005)
 
     back:update(dt)
-    wall1:update(dt)
-    wall2:update(dt)
+    walls:update(dt)
     player:update(dt)
 
-    if wall1:checkCollision(player) or
-       wall2:checkCollision(player)
-    then
+    if walls:checkCollision(player) then
         initGame()
     end
 end
@@ -230,8 +216,7 @@ end
 
 function drawGame()
     back:draw()
-    wall1:draw()
-    wall2:draw()
+    walls:draw()
     player:draw()
 
     if score ~= 0 then
