@@ -41,19 +41,10 @@ local function distance(x1, y1, x2, y2)
     return ((x2 - x1) ^ 2 + (y2 - y1) ^ 2) ^ 0.5
 end
 
-function Walls:update(dt)
-    self.wallUp:update(dt)
-    self.wallDown:update(dt)
-
-    deleteMountain(self.mountainsUp)
-    deleteMountain(self.mountainsDown)
-
-    self.probability = self.probability * 1.0001
-    print (self.probability)
-
+function Walls:_isPossibleNewMountain(mountains1, mountains2)
     if love.math.random() < self.probability then 
-        local lastDown = self.mountainsDown.queue[self.mountainsDown.last]
-        local lastUp = self.mountainsUp.queue[self.mountainsUp.last]
+        local lastDown = mountains1.queue[mountains1.last]
+        local lastUp = mountains2.queue[mountains2.last]
         if not lastUp or lastUp.x + self.minDist < W then
             local r = love.math.random()
             local w = self.minMountainW + r * self.rangeMountainW
@@ -64,35 +55,41 @@ function Walls:update(dt)
                             W + w/2, h)
             end
             if dist > self.minDist then
-                local mountain = WorldObject(images["mountain0"], w, h)
-                mountain.vx = self.vx
-                mountain.scale_h = -mountain.scale_h
-                mountain:setPosition(W, 0)
-                mountain.oy = mountain.img_h
-                self.mountainsUp:push(mountain)
+                return true, w , h
             end
         end
     end
 
-    if love.math.random() < self.probability then
-        local lastDown = self.mountainsDown.queue[self.mountainsDown.last]
-        local lastUp = self.mountainsUp.queue[self.mountainsUp.last]
-        if not lastDown or lastDown.x + self.minDist < W then
-            local r = love.math.random()
-            local w = self.minMountainW + r * self.rangeMountainW
-            local h = self.minMountainH + r * self.rangeMountainH
-            dist = 100000
-            if lastUp then
-                dist = distance(lastUp.x + lastUp.w/2, lastUp.y + lastUp.h,
-                            W + w/2, h)
-            end
-            if dist > self.minDist then
-                local mountain = WorldObject(images["mountain0"], w, h)
-                mountain.vx = self.vx
-                mountain:setPosition(W, H - mountain.h)
-                self.mountainsDown:push(mountain)
-            end
-        end
+    return false
+end
+
+function Walls:update(dt)
+    self.wallUp:update(dt)
+    self.wallDown:update(dt)
+
+    deleteMountain(self.mountainsUp)
+    deleteMountain(self.mountainsDown)
+
+    self.probability = self.probability * 1.0001
+    print (self.probability)
+
+
+    local sol, w, h = self:_isPossibleNewMountain(self.mountainsDown, self.mountainsUp)
+    if sol then
+        local mountain = WorldObject(images["mountain0"], w, h)
+        mountain.vx = self.vx
+        mountain.scale_h = -mountain.scale_h
+        mountain:setPosition(W, 0)
+        mountain.oy = mountain.img_h
+        self.mountainsUp:push(mountain)
+    end
+
+    sol, w, h = self:_isPossibleNewMountain(self.mountainsUp, self.mountainsDown)
+    if sol then
+        local mountain = WorldObject(images["mountain0"], w, h)
+        mountain.vx = self.vx
+        mountain:setPosition(W, H - mountain.h)
+        self.mountainsDown:push(mountain)
     end
 
     for i = self.mountainsUp.first, self.mountainsUp.last do
@@ -102,8 +99,6 @@ function Walls:update(dt)
     for i = self.mountainsDown.first, self.mountainsDown.last do
         self.mountainsDown.queue[i]:update(dt)
     end
-    --[[
-    --]]
 end
 
 function Walls:draw()
