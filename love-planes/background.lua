@@ -21,7 +21,7 @@ end
 function Background:draw(stepSize)
     love.graphics.setColor(self.color)
 
-    local x = self.x
+    local x = math.floor(self.x)
     while x < W do
         love.graphics.draw(self.img, x, self.y, self.r,
             self.scale_w, self.scale_h, self.ox, self.oy)
