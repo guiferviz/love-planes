@@ -61,7 +61,7 @@ function love.load()
     loadGameData()
 
     -- Set screen dimensions.
-    love.window.setMode(W, H, {resizable=true, fullscreen=false})
+    --love.window.setMode(W, H, {resizable=true, fullscreen=false})
     Screen.set(W, H)
 
     -- Load all the images
@@ -79,13 +79,15 @@ function love.load()
     tap:setPosition(W/2 - tap.img_w/2, H * 2/3 - 40)
 
     --Music
-    music = love.audio.newSource("sounds/Good-Morning-Doctor-Weird.mp3") -- if "static" is omitted, LÖVE will stream the file from disk, good for longer music tracks
+    music = love.audio.newSource("sounds/Good-Morning-Doctor-Weird.mp3")
     music:setLooping(true)
     music:play()
 
     -- Fonts
-    fontNumbers = love.graphics.newImageFont(images["numbers"], "0123456789", 10)
-    fontLetters = love.graphics.newImageFont(images["letters"], "abcdefghijklmnopqrstuvwxyz ")
+    fontNumbers = love.graphics.newImageFont(images["numbers"],
+        "0123456789", 10)
+    fontLetters = love.graphics.newImageFont(images["letters"],
+        "abcdefghijklmnopqrstuvwxyz ")
 
     initGame()
 end
@@ -149,7 +151,7 @@ function love.draw()
 
     if state == "menu" then
         drawMenu()
-    elseif state == "game" then
+    elseif state == "game" or state == "dead" then
         drawGame()
     end
 
@@ -174,6 +176,48 @@ function love.keyreleased(key)
     end
 end
 
+function love.run()
+ 
+    if love.math then
+        love.math.setRandomSeed(os.time())
+    end
+ 
+    if love.load then love.load(arg) end
+ 
+    -- We don't want the first frame's dt to include time taken by love.load.
+    if love.timer then love.timer.step() end
+ 
+    local dt = 0
+ 
+    -- Main loop time.
+    while true do
+        -- Process events.
+        love.event.pump()
+        for name, a,b,c,d,e,f in love.event.poll() do
+            if name == "quit" then
+                if not love.quit or not love.quit() then
+                    return a
+                end
+            end
+            love.handlers[name](a,b,c,d,e,f)
+        end
+ 
+        -- Update dt, as we'll be passing it to update
+        love.timer.step()
+        dt = love.timer.getDelta()
+ 
+        -- Call update and draw
+        love.update(dt)
+ 
+        love.graphics.origin()
+        love.draw()
+        love.graphics.present()
+ 
+        --love.timer.sleep(0.001)
+    end
+ 
+end
+
 
 function updateMenu(dt)
     back:update(dt)
@@ -191,7 +235,8 @@ function updateGame(dt)
     player:update(dt)
 
     if walls:checkCollision(player) then
-        initGame()
+        state = "dead"
+        flux.to(flux, 1, {}):oncomplete(initGame)
     end
 end
 

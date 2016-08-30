@@ -44,24 +44,38 @@ end
 function Player:checkCollision(o, sx)
     if AnimatedObject.checkCollision(self, o) then
         for _, p in pairs(self.collisionPoints) do
-            local x = (self.x + (p.x * self.scale_w) - o.x) / o.scale_w + o.ox
-            local y = (self.y + (p.y * self.scale_h) - o.y) / o.scale_h + o.oy
+            local x, y = self:toWorld(p.x, p.y)
+            x = (x - o.x) / o.scale_w + o.ox
+            y = (y - o.y) / o.scale_h + o.oy
             x = math.floor(x)
             y = math.floor(y)
+
 
             if x >= 0 and x < o.img_w and y >= 0 and y < o.img_h then
                 r, g, b, a = o.img:getData():getPixel(x, y)
 
                 if a >= 128 then
-                    --self.queue:push({x = self.x + (p.x * self.scale_w),
-                    --                 y = self.y + (p.y * self.scale_h)})
+                    --self.queue:push({x = p.x, y = p.y})
                     return true
                 end
             end
         end
+
+        --if self.queue:size() > 0 then return true end
     end
 
     return false
+end
+
+function Player:toWorld(x, y)
+    x = (x * self.scale_w) - self.w / 2
+    y = (y * self.scale_h) - self.h / 2
+    local sin = math.sin(self.r)
+    local cos = math.cos(self.r)
+    x, y = cos*x - sin*y, sin*x + cos*y
+    x, y = self.x + x + self.w / 2, self.y + y + self.h / 2
+
+    return x, y
 end
 
 function Player:draw()
@@ -75,8 +89,7 @@ function Player:draw()
     love.graphics.setPointSize(10)
     love.graphics.setColor(0, 0, 250)
     for _, p in pairs(self.collisionPoints) do
-        local x = self.x + (p.x * self.scale_w)
-        local y = self.y + (p.y * self.scale_h)
+        local x, y = self:toWorld(p.x, p.y)
         love.graphics.points(x, y)
     end
 
@@ -84,7 +97,8 @@ function Player:draw()
     love.graphics.setColor(0, 255, 0)
     for i = self.queue.first, self.queue.last do
         p = self.queue:pop()
-        love.graphics.points(p.x, p.y)
+        local x, y = self:toWorld(p.x, p.y)
+        love.graphics.points(x, y)
     end
     --]]
 end
