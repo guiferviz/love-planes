@@ -125,7 +125,7 @@ function startGame()
         v:stop()
     end
     ready.tween = nil
-    walls.probability = 0.02
+    walls.probability = 0.01
     player.gravity = gravity
     score = 0
 end

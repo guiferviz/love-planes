@@ -48,6 +48,9 @@ function Walls:update(dt)
     deleteMountain(self.mountainsUp)
     deleteMountain(self.mountainsDown)
 
+    self.probability = self.probability * 1.0001
+    print (self.probability)
+
     if love.math.random() < self.probability then 
         local lastDown = self.mountainsDown.queue[self.mountainsDown.last]
         local lastUp = self.mountainsUp.queue[self.mountainsUp.last]
