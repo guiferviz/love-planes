@@ -75,11 +75,6 @@ function love.load()
     back = Background(images["back"])
     back:setSize(W, H)
 
-    ready = WorldObject(images["ready"])
-    ready:setPosition(W/2, H/2)
-    ready.ox = ready.img_w / 2
-    ready.oy = ready.img_h / 2
-
     tap = AnimatedObject{"click", "no_click"}
     tap:setPosition(W/2 - tap.img_w/2, H * 2/3 - 40)
 
@@ -117,6 +112,10 @@ function initGame()
 
     music:setPitch(1)
 
+    ready = WorldObject(images["ready"])
+    ready:setPosition(W/2, H/2)
+    ready.ox = ready.img_w / 2
+    ready.oy = ready.img_h / 2
     ready.animate = true
     animateReady()
 
@@ -131,6 +130,10 @@ function startGame()
     state = "game"
 
     ready.animate = false
+    for k, v in pairs(ready.tween) do
+        v:stop()
+    end
+    ready.tween = nil
     wall1.probability = 0.01
     wall2.probability = 0.01
     player.gravity = gravity
@@ -252,12 +255,16 @@ function animateReady()
     local speed = 0.5
     local r = love.math.random() < 0.5 and -0.1 or 0.1
 
-    ready.tween = flux.to(ready, speed, {scale_w = ready.scale_w * scale, scale_h = ready.scale_h * scale})
+    ready.tween = {}
+    ready.tween[1] = flux.to(ready, speed, {scale_w = ready.scale_w * scale, scale_h = ready.scale_h * scale})
         :delay(3)
+    ready.tween[2] = ready.tween[1]
         :after(speed, {scale_w = ready.scale_w, scale_h = ready.scale_h})
+    ready.tween[3] = ready.tween[2]
         :after(speed  * 2, {r = r})
         :delay(3)
         :ease("elasticinout")
+    ready.tween[4] = ready.tween[3]
         :after(speed * 2, {r = ready.r})
         :ease("elasticinout")
         :oncomplete(animateReady)
