@@ -116,31 +116,41 @@ function Walls:draw()
     end
 end
 
+function Walls:_checkCollision( wall, o)
+    if wall:checkCollision(o) then
+        self.woAux.y = wall.y
+        self.woAux.ox = wall.ox
+        self.woAux.oy = wall.oy
+        self.woAux.scale_w = wall.scale_w
+        self.woAux.scale_h = wall.scale_h
+        local x = wall.x
+        while x < W do
+            self.woAux.x = x
+            if wall:checkCollision(self.woAux, o)
+                and o:checkCollision(self.woAux) then
+                    return true
+            end
+            x = x + wall.w
+        end
+    end
+end
+
 function Walls:checkCollision(o)
-    --[[
-    for i = self.mountains.first, self.mountains.last do
-        if o:checkCollision(self.mountains.queue[i]) then
+    
+    for i = self.mountainsUp.first, self.mountainsUp.last do
+        if o:checkCollision(self.mountainsUp.queue[i]) then
             return true
         end
     end
 
-    if Background.checkCollision(self, o) then
-        self.woAux.y = self.y
-        self.woAux.ox = self.ox
-        self.woAux.oy = self.oy
-        self.woAux.scale_w = self.scale_w
-        self.woAux.scale_h = self.scale_h
-        local x = self.x
-        while x < W do
-            self.woAux.x = x
-            if Background.checkCollision(self.woAux, o)
-                and o:checkCollision(self.woAux) then
-                    return true
-            end
-            x = x + self.w
+    for i = self.mountainsDown.first, self.mountainsDown.last do
+        if o:checkCollision(self.mountainsDown.queue[i]) then
+            return true
         end
     end
 
-    --]]
-    return false
+    local c = self:_checkCollision(self.wallUp, o)
+    c = c or self:_checkCollision(self.wallDown, o)
+
+    return c
 end
