@@ -7,14 +7,14 @@ function Walls:init()
     self.vx = -300
     self.mountainsUp = Queue()
     self.mountainsDown = Queue()
-    self.wallUp = Background(images["wall"])
+    self.wallUp = Background(imagesData["wall"])
     self.wallUp:setSize(W, 150)
     self.wallUp:setPosition(-love.math.random() * W, 0)
     self.wallUp.scale_h = -self.wallUp.scale_h
     self.wallUp.oy = self.wallUp.img_h
     self.wallUp.vx = self.vx
 
-    self.wallDown = Background(images["wall"])
+    self.wallDown = Background(imagesData["wall"])
     self.wallDown:setSize(W, 150)
     self.wallDown:setPosition(-love.math.random() * W, H - self.wallDown.h)
     self.wallDown.vx = self.vx
@@ -26,7 +26,7 @@ function Walls:init()
     self.rangeMountainH = 150 * 1.2
     self.probability = 0.01
 
-    self.woAux = WorldObject(images["wall"])
+    self.woAux = WorldObject(imagesData["wall"])
 end
 
 local function deleteMountain(mountains)
@@ -63,7 +63,7 @@ function Walls:update(dt)
                             W + w/2, h)
             end
             if dist > self.minDist then
-                local mountain = WorldObject(images["mountain0"], w, h)
+                local mountain = WorldObject(imagesData["mountain0"], w, h)
                 mountain.vx = self.vx
                 mountain.scale_h = -mountain.scale_h
                 mountain:setPosition(W, 0)
@@ -86,7 +86,7 @@ function Walls:update(dt)
                             W + w/2, h)
             end
             if dist > self.minDist then
-                local mountain = WorldObject(images["mountain0"], w, h)
+                local mountain = WorldObject(imagesData["mountain0"], w, h)
                 mountain.vx = self.vx
                 mountain:setPosition(W, H - mountain.h)
                 self.mountainsDown:push(mountain)

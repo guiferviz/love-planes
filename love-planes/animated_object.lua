@@ -1,5 +1,3 @@
-
-
 AnimatedObject = class(WorldObject)
 
 
@@ -11,7 +9,7 @@ function AnimatedObject:init(imgList)
     self.time = 0
     self.animationSpeed = 1  -- in seconds
 
-	WorldObject.init(self, images[self.imgList[self.imgIdx]])
+	WorldObject.init(self, imagesData[self.imgList[self.imgIdx]])
 end
 
 
@@ -22,6 +20,7 @@ function AnimatedObject:update(dt)
     if self.time > self.animationSpeed then
         self.time = self.time - self.animationSpeed
         self.imgIdx = self.imgIdx % self.imgListSize + 1
-        self:setImage(images[self.imgList[self.imgIdx]])
+        imageName = self.imgList[self.imgIdx]
+        self:setImage(imagesData[imageName])
     end
 end

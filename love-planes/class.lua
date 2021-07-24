@@ -1,4 +1,3 @@
-
 --[[
     Creates a new class.
     You can indicate a base class if you want the new class to
@@ -101,4 +100,3 @@ function instanceof(object, class)
 
     return false
 end
-

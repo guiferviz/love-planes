@@ -1,5 +1,3 @@
-
-
 Background = class(WorldObject)
 
 

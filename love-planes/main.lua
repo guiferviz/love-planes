@@ -1,4 +1,3 @@
-
 require "class"
 require "world_object"
 require "animated_object"
@@ -42,12 +41,12 @@ imagesPaths = {plane0 = "images/plane0.png",
                letters = "images/letters.png",
                gameover = "images/game_over.png"}
 -- Key: image id    Value: love image object
-images = {}
+imagesData = {}
 seed = os.time()
 
 
 function loadGameData()
-    if love.filesystem.exists(SAVE_FILENAME) then
+    if love.filesystem.getInfo(SAVE_FILENAME) then
         local saveRead = love.filesystem.read(SAVE_FILENAME)
         save = bitser.loads(saveRead)
     end
@@ -67,32 +66,32 @@ function love.load()
 
     -- Load all the images
     for k, v in pairs(imagesPaths) do
-        images[k] = love.graphics.newImage(v)
+        imagesData[k] = love.image.newImageData(v)
     end
 
     -- Set random seed.
     love.math.setRandomSeed(seed)
 
-    back = Background(images["back"])
+    back = Background(imagesData["back"])
     back:setSize(W, H)
 
     tap = AnimatedObject{"click", "no_click"}
     tap:setPosition(W/2 - tap.img_w/2, H * 2/3 - 40)
 
-    gameover = WorldObject(images["gameover"])
+    gameover = WorldObject(imagesData["gameover"])
     gameover:setPosition(W/2, H/2)
     gameover.ox = gameover.img_w / 2
     gameover.oy = gameover.img_h / 2
 
     --Music
-    music = love.audio.newSource("sounds/Good-Morning-Doctor-Weird.mp3")
+    music = love.audio.newSource("sounds/Good-Morning-Doctor-Weird.mp3", "stream")
     music:setLooping(true)
     music:play()
 
     -- Fonts
-    fontNumbers = love.graphics.newImageFont(images["numbers"],
+    fontNumbers = love.graphics.newImageFont(imagesData["numbers"],
         "0123456789", 10)
-    fontLetters = love.graphics.newImageFont(images["letters"],
+    fontLetters = love.graphics.newImageFont(imagesData["letters"],
         "abcdefghijklmnopqrstuvwxyz ")
 
     initGame()
@@ -111,7 +110,7 @@ function initGame()
 
     music:setPitch(1)
 
-    ready = WorldObject(images["ready"])
+    ready = WorldObject(imagesData["ready"])
     ready:setPosition(W/2, H/2)
     ready.ox = ready.img_w / 2
     ready.oy = ready.img_h / 2
@@ -186,7 +185,6 @@ function love.keyreleased(key)
 end
 
 function love.run()
- 
     if love.math then
         love.math.setRandomSeed(os.time())
     end
@@ -224,7 +222,6 @@ function love.run()
  
         --love.timer.sleep(0.001)
     end
- 
 end
 
 

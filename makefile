@@ -1,4 +1,3 @@
-
 HOME=$(CURDIR)
 SRC=love-planes
 OUT=game.love

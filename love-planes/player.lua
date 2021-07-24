@@ -52,9 +52,9 @@ function Player:checkCollision(o, sx)
 
 
             if x >= 0 and x < o.img_w and y >= 0 and y < o.img_h then
-                r, g, b, a = o.img:getData():getPixel(x, y)
+                r, g, b, a = o.imgData:getPixel(x, y)
 
-                if a >= 128 then
+                if a >= 0.5 then
                     --self.queue:push({x = p.x, y = p.y})
                     return true
                 end

@@ -1,4 +1,3 @@
-
 --[[
         This class represents any object that can be placed in
     the world.
@@ -22,7 +21,7 @@
 WorldObject = class()
 
 
-function WorldObject:init(img, width, height)
+function WorldObject:init(imgData, width, height)
     self.x = 0
     self.y = 0
     self.r = 0
@@ -34,9 +33,10 @@ function WorldObject:init(img, width, height)
 
     self.img_w = 0
     self.img_h = 0
+    self.imgData = nil
     self.img = nil
-    self:setImage(img)
-    
+    self:setImage(imgData)
+
     self.w = 0
     self.h = 0
     self.scale_w = 0
@@ -52,14 +52,11 @@ function WorldObject:setPosition(x, y)
     self.y = y
 end
 
-function WorldObject:setImage(img)
-    if type(img) == "string" then
-        img = love.graphics.newImage(img)
-    end
-    
-    self.img = img
-    self.img_w = img:getWidth()
-    self.img_h = img:getHeight()
+function WorldObject:setImage(imgData)
+    self.imgData = imgData
+    self.img = love.graphics.newImage(imgData)
+    self.img_w = self.img:getWidth()
+    self.img_h = self.img:getHeight()
 end
 
 function WorldObject:setSize(width, height)
